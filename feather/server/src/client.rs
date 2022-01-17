@@ -13,10 +13,7 @@ use base::{
     BlockId, ChunkHandle, ChunkPosition, EntityKind, EntityMetadata, Gamemode, Position,
     ProfileProperty, Text, ValidBlockPosition,
 };
-use common::{
-    chat::{ChatKind, ChatMessage},
-    Window,
-};
+use common::Window;
 use libcraft_items::InventorySlot;
 use packets::server::{Particle, SetSlot, SpawnLivingEntity, UpdateLight, WindowConfirmation};
 use protocol::packets::server::{
@@ -34,7 +31,7 @@ use protocol::{
     },
     ClientPlayPacket, Nbt, ProtocolVersion, ServerPlayPacket, Writeable,
 };
-use quill_common::components::{OnGround, PreviousGamemode};
+use quill_common::components::{ChatKind, ChatMessage, OnGround, PreviousGamemode};
 
 use crate::{
     entities::{PreviousOnGround, PreviousPosition},

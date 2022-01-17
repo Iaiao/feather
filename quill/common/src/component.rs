@@ -198,7 +198,7 @@ host_component_enum! {
         CanBuild = 1020,
         Instabreak = 1021,
         Invulnerable = 1022,
-
+        ChatBox = 1023,
 
     }
 }

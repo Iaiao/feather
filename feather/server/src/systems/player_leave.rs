@@ -4,10 +4,10 @@ use base::anvil::entity::{AnimalData, BaseEntityData};
 use base::anvil::player::{InventorySlot, PlayerAbilities, PlayerData};
 use base::{Gamemode, Inventory, Position, Text};
 use common::entities::player::HotbarSlot;
-use common::{chat::ChatKind, Game};
+use common::Game;
 use ecs::{SysResult, SystemExecutor};
 use quill_common::components::{
-    CanBuild, CanCreativeFly, CreativeFlying, CreativeFlyingSpeed, Health, Instabreak,
+    CanBuild, CanCreativeFly, ChatKind, CreativeFlying, CreativeFlyingSpeed, Health, Instabreak,
     Invulnerable, Name, PreviousGamemode, WalkSpeed,
 };
 

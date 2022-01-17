@@ -1,5 +1,5 @@
 use base::{Position, Text};
-use common::{chat::ChatKind, Game};
+use common::Game;
 use ecs::{Entity, EntityRef, SysResult};
 use interaction::{
     handle_held_item_change, handle_interact_entity, handle_player_block_placement,
@@ -12,7 +12,7 @@ use protocol::{
     },
     ClientPlayPacket,
 };
-use quill_common::components::Name;
+use quill_common::components::{ChatKind, Name};
 
 use crate::{NetworkId, Server};
 

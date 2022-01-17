@@ -25,9 +25,6 @@ mod region_worker;
 pub mod world;
 pub use world::World;
 
-pub mod chat;
-pub use chat::ChatBox;
-
 pub mod entities;
 
 pub mod interactable;

@@ -1,5 +1,6 @@
-use common::{chat::ChatPreference, ChatBox, Game};
+use common::Game;
 use ecs::{EntityBuilder, SysResult, SystemExecutor};
+use quill_common::components::{ChatBox, ChatPreference};
 
 use crate::{ClientId, Server};
 

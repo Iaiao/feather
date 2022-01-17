@@ -1,7 +1,7 @@
 use feather_base::Text;
-use feather_common::chat::{ChatKind, ChatMessage};
 use feather_ecs::Entity;
 use feather_plugin_host_macros::host_function;
+use quill_common::components::{ChatKind, ChatMessage};
 
 use crate::context::{PluginContext, PluginPtr};
 

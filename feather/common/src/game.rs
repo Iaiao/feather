@@ -5,13 +5,13 @@ use ecs::{
     Ecs, Entity, EntityBuilder, HasEcs, HasResources, NoSuchEntity, Resources, SysResult,
     SystemExecutor,
 };
+use quill_common::components::{ChatBox, ChatKind, ChatMessage};
 use quill_common::{entities::Player, entity_init::EntityInit};
 
 use crate::{
-    chat::{ChatKind, ChatMessage},
     chunk::entities::ChunkEntities,
     events::{BlockChangeEvent, EntityCreateEvent, EntityRemoveEvent, PlayerJoinEvent},
-    ChatBox, World,
+    World,
 };
 
 type EntitySpawnCallback = Box<dyn FnMut(&mut EntityBuilder, &EntityInit)>;
