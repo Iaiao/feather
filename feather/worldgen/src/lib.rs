@@ -41,7 +41,7 @@ pub trait WorldGenerator: Send + Sync {
     fn generate_chunk(&self, position: ChunkPosition) -> Chunk;
 }
 
-pub struct EmptyWorldGenerator {}
+pub struct EmptyWorldGenerator;
 
 impl WorldGenerator for EmptyWorldGenerator {
     fn generate_chunk(&self, position: ChunkPosition) -> Chunk {
@@ -410,7 +410,7 @@ mod tests {
     #[test]
     pub fn test_worldgen_empty() {
         let chunk_pos = ChunkPosition { x: 1, z: 2 };
-        let generator = EmptyWorldGenerator {};
+        let generator = EmptyWorldGenerator;
         let chunk = generator.generate_chunk(chunk_pos);
 
         // No sections have been generated
