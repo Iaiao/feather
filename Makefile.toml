@@ -1,0 +1,166 @@
+[config]
+default_to_workspace = false
+
+[env]
+RUST_BACKTRACE = 1
+RUSTUP_TOOLCHAIN = "stable"
+RUSTFLAGS = "-C rpath -C prefer-dynamic -C link-arg=-Wl,-rpath=lib -C link-arg=-export-dynamic"
+DYNAMIC_LIBRARY_EXTENSION = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "unknown", mapping = { "linux" = ".so", "macos" = ".dylib", "windows" = ".dll", "openbsd" = ".so" } }
+EXECUTABLE_EXTENSION = { source = "${CARGO_MAKE_RUST_TARGET_OS}", default_value = "unknown", mapping = {"linux" = "", "macos" = "", "windows" = ".exe", "openbsd" = "" } }
+
+[tasks.default]
+alias = "build"
+
+[tasks.build]
+cwd = "."
+clear = true
+script_runner = "@duckscript"
+script = '''
+    cp target/debug/libfeather_api${DYNAMIC_LIBRARY_EXTENSION} build/lib/libfeather_api${DYNAMIC_LIBRARY_EXTENSION}
+    cp target/debug/feather${EXECUTABLE_EXTENSION} build/feather${EXECUTABLE_EXTENSION}
+'''
+dependencies = [ "build-feather", "copy-stdlib" ]
+
+[tasks.copy-stdlib]
+script = '''
+    rm -rf build/lib
+    mkdir -p build/lib
+    cp $HOME/.rustup/toolchains/stable-${CARGO_MAKE_RUST_TARGET_TRIPLE}/lib/libstd-* build/lib
+'''
+
+[tasks.copy-stdlib.windows]
+script = '''
+    rmdir /s /q build\\lib
+    mkdir build\\lib
+    cp %USERPROFILE%\\.rustup\\toolchains\\stable-${CARGO_MAKE_RUST_TARGET_TRIPLE}\\lib\\libstd-* build\\lib
+'''
+
+[tasks.build-feather]
+command = "cargo"
+args = ["build", "${@}"]
+
+[tasks.clean-build]
+dependencies = [ "clean", "build" ]
+
+[tasks.clean]
+command = "cargo"
+args = [ "clean" ]
+dependencies = [ "clean-lib", "clean-examples" ]
+
+[tasks.clean-lib]
+script = "rm -r lib"
+
+[tasks.run]
+cwd = "build"
+command = "./feather"
+dependencies = [ "build" ]
+
+[tasks.run.windows]
+command = "start"
+args = [ "feather.exe" ]
+
+[tasks.build-example]
+command = "cargo"
+args = [ "build", "--example", "${@}" ]
+
+[tasks.add-example]
+script_runner = "@duckscript"
+script = '''
+    args_str = get_env CARGO_MAKE_TASK_ARGS
+    args = split ${args_str} ";"
+    plugin_name = array_get ${args} 0
+    cp target/debug/examples/lib${plugin_name}${DYNAMIC_LIBRARY_EXTENSION} build/plugins/${plugin_name}${DYNAMIC_LIBRARY_EXTENSION}
+'''
+dependencies = [ "build-example" ]
+
+[tasks.example]
+dependencies = [ "clean-examples", "add-example" ]
+
+[tasks.clean-examples]
+script_runner = "@duckscript"
+script = '''
+    rm -r build/plugins
+    mkdir build/plugins
+'''
+
+[tasks.run-example]
+script_runner = "@duckscript"
+script = '''
+    args_str = get_env CARGO_MAKE_TASK_ARGS
+    args = split ${args_str} ";"
+    array_remove ${args} 0
+    run_args = array_join ${args} " "
+    exec cargo make run ${run_args}
+'''
+dependencies = [ "example" ]
+
+[tasks.test]
+clear = true
+dependencies = [ "test-api", "test-server" ]
+
+[tasks.test-api]
+command = "cargo"
+args = [ "test", "--package", "feather_api" ]
+
+[tasks.test-server]
+command = "cargo"
+args = [ "test", "--package", "feather" ]
+
+[tasks.packet-logger]
+cwd = "build"
+command = "../target/debug/packet_logger"
+args = [ "-a", "127.0.0.1:25565", "-p", "127.0.0.1:25566", "${@}" ]
+dependencies = [ "copy-stdlib", "build-packet-logger", "echo-packet-logger" ]
+
+[tasks.packet-logger.windows]
+command = "start"
+args = [ "..\\target\\debug\\packet_logger.exe", "-a", "127.0.0.1:25565", "-p", "127.0.0.1:25566", "${@}" ]
+
+[tasks.echo-packet-logger]
+script_runner = "@duckscript"
+script = '''
+    echo Running packet-logger
+    echo (server) 127.0.0.1:25565 <- 127.0.0.1:25566 (proxy)
+'''
+
+[tasks.build-packet-logger]
+command = "cargo"
+args = [ "build", "--package", "packet_logger" ]
+
+[tasks.format]
+install_crate = { crate_name = "rustfmt", binary = "rustfmt", test_arg = "--help" }
+command = "cargo"
+args = [ "+nightly", "fmt", "--all" ]
+
+[tasks.check]
+command = "cargo"
+args = [ "check", "--all-targets" ]
+
+[tasks.build-release]
+cwd = "."
+clear = true
+script_runner = "@duckscript"
+script = '''
+    cp target/debug/libfeather_api${DYNAMIC_LIBRARY_EXTENSION} build/lib/libfeather_api${DYNAMIC_LIBRARY_EXTENSION}
+    cp target/debug/feather${EXECUTABLE_EXTENSION} build/feather${EXECUTABLE_EXTENSION}
+'''
+dependencies = [ "clean", "build-feather-release", "copy-stdlib-release" ]
+
+[tasks.copy-stdlib-release]
+script = '''
+    rm -rf release/lib
+    mkdir -p release/lib
+    cp $HOME/.rustup/toolchains/stable-${CARGO_MAKE_RUST_TARGET_TRIPLE}/lib/libstd-* build/lib
+'''
+
+[tasks.copy-stdlib-release.windows]
+script = '''
+    rmdir /s /q release\\lib
+    mkdir release\\lib
+    cp %USERPROFILE%\\.rustup\\toolchains\\stable-${CARGO_MAKE_RUST_TARGET_TRIPLE}\\lib\\libstd-* build\\lib
+'''
+
+[tasks.build-feather-release]
+command = "cargo"
+args = ["build", "--release", "${@}"]
+

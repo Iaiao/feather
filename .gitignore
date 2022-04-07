@@ -1,0 +1,12 @@
+**/target
+**/*.rs.bk
+**/.idea
+**/.vscode
+
+# Cargo build configuration
+.cargo
+
+/build/
+
+# macOS desktop files
+**/.DS_STORE

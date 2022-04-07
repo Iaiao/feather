@@ -1,0 +1,59 @@
+# Configuration for the Feather server.
+
+[network]
+address = "0.0.0.0"
+port = 25565
+# Packets with a size more than or equal to this value will be sent compressed.
+# Compressing packets reduces bandwidth usage but increases CPU activity.
+compression-threshold = 256
+
+[server]
+online-mode = true
+motd = "A Feather server"
+max-players = 16
+default-gamemode = "creative"
+view-distance = 12
+default-dimension = "minecraft:overworld"
+
+[log]
+# For development, it might be useful to set this to "debug" or "trace".
+level = "info"
+
+# UNINMPLEMENTED
+[resource_pack]
+# Server resource pack which is sent to players
+# upon joining. Set this to empty to disable.
+url = ""
+# Optional SHA1 hash of the resource pack file.
+hash = ""
+
+[worlds]
+# World names
+worlds = [ "world" ]
+# The default world where players will spawn on join
+default-world = "world"
+# The generator to use if the world does not exist.
+# Implemented values are: "flat", "void".
+generator = "flat"
+# Format of this field is dependent on the "generator"
+# field above. For "void" worlds this means the biome
+# that should be set in the whole world, for "flat"
+# worlds it has the following format: "block1*count1,block2*count2,...,blockN*countN;biome"
+generator-settings = "bedrock*1,dirt*2,grass_block*1;plains"
+# The seed to use if the world does not exist.
+# Leaving this value empty will generate a random seed.
+# If this value is not a valid integer, the string
+# will be converted using a hash function.
+seed = ""
+
+[proxy]
+# Select the IP forwarding mode that is used by proxies like BungeeCord or Velocity.
+# Valid values are
+# - "none" - for usage without a proxy or with feathers built in proxy
+# - "bungee" - for BungeeCord/Waterfall/Travertine
+# - "velocity" - for Velocity style proxies
+proxy-mode = "none"
+
+# For Velocity, you must specify the forwarding-secret from Velocity's
+# velocity.toml file.
+velocity-secret = ""
